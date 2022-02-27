@@ -25,8 +25,11 @@ section .text
 ; Output:
 ; rax = converted integer
 _atoi:  xor     rax, rax
+        xor     rbx, rbx
 .nxtch: movzx   rcx, byte [rdx]
         inc     rdx
+        cmp     rcx, '-'
+        je      .sign
         cmp     rcx, '0'
         jb      .done
         cmp     rcx, '9'
@@ -35,7 +38,12 @@ _atoi:  xor     rax, rax
         imul    rax, 10
         add     rax, rcx
         jmp     .nxtch
-.done:  ret
+.sign:  mov     rbx, 1
+        jmp     .nxtch
+.done:  cmp     rbx, 0
+        je      .return
+        neg     rax
+.return ret
 
 ; Reads up to 0xff symbols from stdin
 ; Input:
@@ -43,14 +51,6 @@ _atoi:  xor     rax, rax
 _input: mov     rax, 0
         mov     rdi, 0
         mov     rdx, 0xff
-        syscall
-        ret
-
-; Writes up to 0xff symbols to stdout
-; Input:
-; rsi = pointer to buffer to read from
-_print: mov     rax, 1
-        mov     rdi, 1
         syscall
         ret
 
@@ -88,20 +88,60 @@ main:   mov     rsi, input1
         mov     rdx, input2
         call    _atoi
         mov     [paramB], rax
+        mov     rax, [paramA]
+        call    _prntf
+        mov     rax, [paramB]
+        call    _prntf
 
-; Task 1
+; Task 11       (X+Y)/(X-Y)
         add     rax, [paramA]
         mov     rbx, [paramA]
         sub     rbx, [paramB]
         xor     rdx, rdx
+        cqo
         idiv    rbx
         call    _prntf
-; Task 2
+; Task 12       (-X)^3 + 3
         mov     rax, [paramA]
         neg     rax
         mov     rcx, 3
         call    _pow
         add     rax, 3
+        call    _prntf
+; Task 13       X-Y/X+1
+        mov     rax, [paramB]
+        cqo
+        idiv    qword [paramA]
+        neg     rax
+        inc     rax
+        add     rax, [paramA]
+        call    _prntf
+; Task 14       ((X+Y)/Y^2-1)*X
+        mov     rax, [paramB]
+        mov     rcx, 2
+        call    _pow         
+        mov     rbx, rax     
+        mov     rax, [paramA]
+        add     rax, [paramB]
+        xor     rdx, rdx
+        cqo
+        idiv    rbx
+        dec     rax
+        xor     rdx, rdx
+        cqo
+        imul    qword [paramA]
+        call    _prntf
+; Task 15       (X-Y)%(XY+1)
+        mov     rax, [paramA]
+        imul    qword [paramB]
+        inc     rax
+        mov     rbx, rax
+        mov     rax, [paramA]
+        sub     rax, [paramB]
+        xor     rdx, rdx
+        cqo
+        idiv    rbx
+        mov     rax, rdx
         call    _prntf
 ; End
         mov rax, 60
