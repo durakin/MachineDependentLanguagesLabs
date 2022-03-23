@@ -94,6 +94,7 @@ main:   mov     rsi, input1
         call    _prntf
 
 ; Task 11       (X+Y)/(X-Y)
+        mov     rax, [paramB]
         add     rax, [paramA]
         mov     rbx, [paramA]
         sub     rbx, [paramB]
