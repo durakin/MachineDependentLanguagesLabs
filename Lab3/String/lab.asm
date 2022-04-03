@@ -24,18 +24,31 @@ _output:mov     rax, 1
         syscall
         ret
 
+
 main:   mov     rsi, string
+        mov     rbx, string
         call    _input
-        mov     [n], rax
         xor     rdi, rdi
         mov     rdi, string
+.again: mov     [n], rax
         mov     rcx, [n]
         mov     al, ' '
         cld
         repnz   scasb
-        mov     rdx, rcx
-        mov     rsi, rdi
 
+        ; Fragment that removes numerous leading spaces-;
+        inc     rbx                                     ;         
+        cmp     rbx, rdi                                ;         
+        jne     .ready                                  ;         
+        mov     rax, [n]                                ;         
+        dec     rax                                     ;         
+        inc     rdi
+        inc     rbx                                     ;         
+        jmp     .again                                  ;         
+        ; End of fragment-------------------------------;
+
+.ready: mov     rdx, rcx
+        mov     rsi, rdi
         call    _output
         
         mov rax, 60
