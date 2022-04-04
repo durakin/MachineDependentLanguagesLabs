@@ -23,7 +23,7 @@ int main()
     {
         scanf("%ld", &argArray[i]);
     }
-    printf("Now enter number of a row (starting from 0) to apply a task function\n");
+    printf("Now enter number of a row [0; %ld] to apply a task function\n", n-1);
     scanf("%ld", &e);
     if (e < 0 || e >= n)
     {
@@ -36,7 +36,7 @@ int main()
     {
         for (int j = 0; j < n; j++)
         {
-            printf("%ld ", result[i*3+j]);
+            printf("%ld ", result[i*n+j]);
         }
         printf("\n");        
     }

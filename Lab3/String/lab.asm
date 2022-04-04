@@ -35,7 +35,6 @@ main:   mov     rsi, string
         mov     al, ' '
         cld
         repnz   scasb
-
         ; Fragment that removes numerous leading spaces-;
         inc     rbx                                     ;         
         cmp     rbx, rdi                                ;         
@@ -46,11 +45,9 @@ main:   mov     rsi, string
         inc     rbx                                     ;         
         jmp     .again                                  ;         
         ; End of fragment-------------------------------;
-
 .ready: mov     rdx, rcx
         mov     rsi, rdi
         call    _output
-        
         mov rax, 60
         mov rdi, 0
         syscall
